@@ -6,7 +6,6 @@
   "refmap": "personality.refmap.json",
   "mixins": [
     "BannerItemMixin",
-    "LivingEntityMixin",
     "PlayerMixin"
   ],
   "client": [

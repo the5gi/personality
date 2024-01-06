@@ -1,7 +1,6 @@
 package com.teamabnormals.personality.core.other;
 
 import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
-import com.teamabnormals.personality.client.ClimbAnimation;
 import com.teamabnormals.personality.common.network.MessageS2CSyncCrawl;
 import com.teamabnormals.personality.core.Personality;
 import com.teamabnormals.personality.core.PersonalityConfig;
@@ -36,7 +35,6 @@ public class PersonalityEvents {
 			return;
 
 		UUID uuid = player.getUUID();
-		setBesideClimbableBlock(player, player.onClimbable() && (player.yOld != player.getY() || (player.isShiftKeyDown())));
 		if ((Personality.SITTING_PLAYERS.contains(player.getUUID()) || Personality.SYNCED_SITTING_PLAYERS.contains(player.getUUID())) && !testCrawl(player)) {
 			Personality.SITTING_PLAYERS.remove(uuid);
 			Personality.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new MessageS2CSyncCrawl(player.getUUID(), false));
@@ -80,30 +78,5 @@ public class PersonalityEvents {
 
 	public static boolean testCrawl(Player player) {
 		return !(Personality.SITTING_PLAYERS.contains(player.getUUID()) || Personality.SYNCED_SITTING_PLAYERS.contains(player.getUUID())) && !player.isPassenger();
-	}
-
-	public static boolean isClimbing(Player player) {
-		return !player.isOnGround() && isBesideClimbableBlock(player) && PersonalityConfig.CLIENT.climbingAnimation.get();
-	}
-
-	public static boolean isBesideClimbableBlock(Player player) {
-		IDataManager data = (IDataManager) player;
-		return (data.getValue(Personality.CLIMBING) & 1) != 0;
-	}
-
-	public static void setBesideClimbableBlock(Player player, boolean climbing) {
-		IDataManager data = (IDataManager) player;
-		byte b0 = data.getValue(Personality.CLIMBING);
-		if (climbing) {
-			b0 = (byte) (b0 | 1);
-		} else {
-			b0 = (byte) (b0 & -2);
-		}
-		data.setValue(Personality.CLIMBING, b0);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public static float getClimbingAnimationScale(Player player, float partialTicks) {
-		return Mth.lerp(partialTicks, ((ClimbAnimation) player).getPrevClimbAnim(), ((ClimbAnimation) player).getClimbAnim()) / 4.0F;
 	}
 }

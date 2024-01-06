@@ -39,8 +39,6 @@ public class Personality {
 			.serverAcceptedVersions(NETWORK_PROTOCOL::equals)
 			.simpleChannel();
 
-	public static final TrackedData<Byte> CLIMBING = TrackedData.Builder.create(DataProcessors.BYTE, () -> (byte) 0).build();
-
 	public static final Set<UUID> SITTING_PLAYERS = new HashSet<>();
 	public static final Set<UUID> SYNCED_SITTING_PLAYERS = new HashSet<>();
 
@@ -52,16 +50,11 @@ public class Personality {
 
 		this.setupMessages();
 
-		bus.addListener(this::commonSetup);
 		bus.addListener(this::clientSetup);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.addListener(this::registerKeyBindings));
 
 		context.registerConfig(ModConfig.Type.CLIENT, PersonalityConfig.CLIENT_SPEC);
-	}
-
-	private void commonSetup(FMLCommonSetupEvent event) {
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(Personality.MOD_ID, "climbing"), CLIMBING);
 	}
 
 	private void clientSetup(FMLClientSetupEvent event) {

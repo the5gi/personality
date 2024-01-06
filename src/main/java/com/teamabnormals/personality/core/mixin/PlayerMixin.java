@@ -1,6 +1,5 @@
 package com.teamabnormals.personality.core.mixin;
 
-import com.teamabnormals.personality.client.ClimbAnimation;
 import com.teamabnormals.personality.core.Personality;
 import com.teamabnormals.personality.core.other.PersonalityEvents;
 import net.minecraft.world.entity.EntityType;
@@ -15,22 +14,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity implements ClimbAnimation {
-	private float climbAnim;
-	private float prevClimbAnim;
+public abstract class PlayerMixin extends LivingEntity {
 
 	public PlayerMixin(EntityType<? extends LivingEntity> type, Level level) {
 		super(type, level);
-	}
-
-	@Inject(method = "aiStep()V", at = @At("TAIL"))
-	public void tickClimbAnim(CallbackInfo ci) {
-		this.prevClimbAnim = this.climbAnim;
-		if (PersonalityEvents.isClimbing((Player) (Object) this)) {
-			this.climbAnim = Math.min(this.climbAnim + 1, 4.0F);
-		} else {
-			this.climbAnim = Math.max(this.climbAnim - 1, 0.0F);
-		}
 	}
 
 	@Override
@@ -42,15 +29,5 @@ public abstract class PlayerMixin extends LivingEntity implements ClimbAnimation
 			Personality.SITTING_PLAYERS.remove(this.getUUID());
 		}
 		super.move(type, pos);
-	}
-
-	@Override
-	public float getClimbAnim() {
-		return this.climbAnim;
-	}
-
-	@Override
-	public float getPrevClimbAnim() {
-		return this.prevClimbAnim;
 	}
 }

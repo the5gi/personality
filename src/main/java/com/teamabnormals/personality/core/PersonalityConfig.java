@@ -9,11 +9,9 @@ public class PersonalityConfig {
 	public static class Client {
 		public final ForgeConfigSpec.BooleanValue toggleCrawl;
 		public final ForgeConfigSpec.BooleanValue toggleSitting;
-		public final ConfigValue<Boolean> climbingAnimation;
 
 		public Client(ForgeConfigSpec.Builder builder) {
 			builder.push("animation");
-			this.climbingAnimation = builder.comment("If there should be a special animation for climbing ladders").define("Climbing animation", true);
 			builder.pop();
 			builder.push("keybindings");
 			this.toggleCrawl = builder.comment("If true, crawling will be toggled on or off instead of the keybinding being held down").define("toggleCrawl", false);
